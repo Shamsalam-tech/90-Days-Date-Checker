@@ -2,102 +2,167 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>90 Days Date Checker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>90 Days Professional Checker</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #0f172a;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .box {
-        background: #020617;
-        padding: 25px;
-        border-radius: 12px;
-        width: 320px;
-        text-align: center;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
 
-    h2 {
-        margin-bottom: 15px;
-    }
+.container {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
 
-    input[type="date"] {
-        width: 100%;
-        padding: 10px;
-        border-radius: 6px;
-        border: none;
-        font-size: 16px;
-        margin-bottom: 15px;
-    }
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #222;
+}
 
-    .result {
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 10px;
-        display: none;
-        font-weight: bold;
-    }
+input[type="date"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
 
-    .red {
-        background: #dc2626;
-    }
+input[type="date"]:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 10px rgba(79,70,229,0.3);
+}
 
-    .yellow {
-        background: #facc15;
-        color: #000;
-    }
+.section {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
 
-    .green {
-        background: #16a34a;
+.completed {
+    font-weight: 600;
+    color: #fff;
+}
+
+.remaining {
+    margin-top: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.red {
+    background: #dc2626;
+}
+
+.yellow {
+    background: #facc15;
+    color: #111;
+}
+
+.green {
+    background: #16a34a;
+}
+
+.blue {
+    background: #2563eb;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.6rem;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="box">
-    <h2>90 Days Checker</h2>
+<div class="container">
+    <h1>90 Days Status Checker</h1>
     <input type="date" id="dateInput">
-    <div id="result" class="result"></div>
+
+    <div id="completedBox" class="section completed"></div>
+    <div id="remainingBox" class="section remaining"></div>
 </div>
 
 <script>
-    const dateInput = document.getElementById("dateInput");
-    const result = document.getElementById("result");
+const dateInput = document.getElementById("dateInput");
+const completedBox = document.getElementById("completedBox");
+const remainingBox = document.getElementById("remainingBox");
 
-    dateInput.addEventListener("change", () => {
-        const selectedDate = new Date(dateInput.value);
-        const today = new Date();
+dateInput.addEventListener("change", () => {
+    const selectedDate = new Date(dateInput.value);
+    const today = new Date();
 
-        selectedDate.setHours(0,0,0,0);
-        today.setHours(0,0,0,0);
+    selectedDate.setHours(0,0,0,0);
+    today.setHours(0,0,0,0);
 
-        const diffTime = today - selectedDate;
-        const daysCompleted = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = today - selectedDate;
+    const daysCompleted = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const remainingDays = 90 - daysCompleted;
 
-        result.style.display = "block";
-        result.className = "result";
+    completedBox.style.display = "block";
+    remainingBox.style.display = "block";
 
-        if (daysCompleted < 90) {
-            result.classList.add("red");
-            result.innerHTML = `❌ Less than 90 days<br>Days completed: ${daysCompleted}`;
-        } 
-        else if (daysCompleted === 90) {
-            result.classList.add("yellow");
-            result.innerHTML = `⚠️ Exactly 90 days completed<br>Days completed: ${daysCompleted}`;
-        } 
-        else {
-            result.classList.add("green");
-            result.innerHTML = `✅ More than 90 days<br>Days completed: ${daysCompleted}`;
-        }
-    });
+    completedBox.className = "section completed";
+    remainingBox.className = "section remaining blue";
+
+    if (daysCompleted < 0) {
+        completedBox.classList.add("yellow");
+        completedBox.innerHTML = "⚠️ Please select a past date";
+        remainingBox.style.display = "none";
+        return;
+    }
+
+    if (daysCompleted < 90) {
+        completedBox.classList.add("red");
+        completedBox.innerHTML = `❌ Completed Days: ${daysCompleted}`;
+        remainingBox.innerHTML = `⏳ Remaining Days: ${remainingDays}`;
+    } 
+    else if (daysCompleted === 90) {
+        completedBox.classList.add("yellow");
+        completedBox.innerHTML = `⚠️ Completed Days: 90 (Today!)`;
+        remainingBox.innerHTML = `🎉 Remaining Days: 0`;
+    } 
+    else {
+        completedBox.classList.add("green");
+        completedBox.innerHTML = `✅ Completed Days: ${daysCompleted}`;
+        remainingBox.innerHTML = `🔥 Extra Days: ${daysCompleted - 90}`;
+    }
+});
 </script>
 
 </body>
