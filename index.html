@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>90 Days Date Checker</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .box {
+        background: #020617;
+        padding: 25px;
+        border-radius: 12px;
+        width: 320px;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .result {
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: none;
+        font-weight: bold;
+    }
+
+    .red {
+        background: #dc2626;
+    }
+
+    .yellow {
+        background: #facc15;
+        color: #000;
+    }
+
+    .green {
+        background: #16a34a;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>90 Days Checker</h2>
+    <input type="date" id="dateInput">
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    const dateInput = document.getElementById("dateInput");
+    const result = document.getElementById("result");
+
+    dateInput.addEventListener("change", () => {
+        const selectedDate = new Date(dateInput.value);
+        const today = new Date();
+
+        selectedDate.setHours(0,0,0,0);
+        today.setHours(0,0,0,0);
+
+        const diffTime = today - selectedDate;
+        const daysCompleted = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        result.style.display = "block";
+        result.className = "result";
+
+        if (daysCompleted < 90) {
+            result.classList.add("red");
+            result.innerHTML = `❌ Less than 90 days<br>Days completed: ${daysCompleted}`;
+        } 
+        else if (daysCompleted === 90) {
+            result.classList.add("yellow");
+            result.innerHTML = `⚠️ Exactly 90 days completed<br>Days completed: ${daysCompleted}`;
+        } 
+        else {
+            result.classList.add("green");
+            result.innerHTML = `✅ More than 90 days<br>Days completed: ${daysCompleted}`;
+        }
+    });
+</script>
+
+</body>
+</html>
